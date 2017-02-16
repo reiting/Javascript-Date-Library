@@ -1,5 +1,5 @@
 # FS-SP17-Lab6
-# speed-dating# Lab 05: It's A Date!
+# speed-dating# Lab 06: It's A Date!
 
 ##### Covalence
 
