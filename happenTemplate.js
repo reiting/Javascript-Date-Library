@@ -1,86 +1,268 @@
-var library = (function() {
+var library = (function () {
+
+    //gets the number of the current month
+    var monthNumber = new Date().getMonth() + 1;
+    //gets the year as 4 digits
+    var Year = new Date().getFullYear();
+    //gets the day of the month
+    var dayMonth = new Date().getDate();
+    //gets day of week from 0-6
+    var dayWeek = new Date().getDay();
+    //array with Month names
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    //gets the name of the current month using the array monthNames
+    var currentMonth = (monthNames[new Date().getMonth()]);
+    //array with abbreviated month names
+    var abrMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    //gets the abbreviated name of the current month using the array of monthNames
+    var abrCurrentMonth = (abrMonthNames[new Date().getMonth()]);
+    //array with weekday names
+    var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    //gets the current day using the array of weekday
+    var currentDay = (weekday[dayWeek]);
+    //gets the time in 24 hour format
+    var twentyFourHour = new Date().getHours();
+    //gets seconds from 0-59
+    var seconds = new Date().getSeconds();
+    //gets minutes from 0-59
+    var minutes = new Date().getMinutes();
+    //gets milliseconds in UTC
+    var unixMillisecond = new Date().getTime();
+    //Am and PM
+    var amPM = function () {
+        if (twentyFourHour >= 12) {
+            return ("PM");
+        } else {
+            return ("AM");
+        }
+    }();
+    //get twelve hour time
+    var twelveHour = function () {
+        if (twentyFourHour <= 12) {
+            return twentyFourHour;
+        } else {
+            return (twentyFourHour % 12);
+        }
+    }();
+
+    //get current time
+    function addZero(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+
+    //variables for hour, minute, and second
+    var h = addZero(new Date().getHours());
+    var m = addZero(new Date().getMinutes());
+    var s = addZero(new Date().getSeconds());
+
+    //gets double digit month
+    var monthDblDigit = function () {
+        if (monthNumber < 10) {
+            return ("0" + monthNumber.toString());
+        } else {
+            return monthNumber.toString();
+        }
+    }();
+
+    //gets double digit day
+    var dayDblDigit = function () {
+        if (dayMonth < 10) {
+            return ("0" + dayMonth.toString());
+        } else {
+            return dayMonth.toString();
+        }
+    }();
+
+    //function to get the ordinal day 
+    var ordinalDay = function () {
+        if (dayMonth > 3 && dayMonth < 21) return "th";
+
+        else if ((dayMonth % 10) == 1) return "st";
+        else if ((dayMonth % 10) == 2) return "nd";
+        else if ((dayMonth % 10) == 3) return "rd";
+        else return "th";
+    }();
+
+    //gets day of Year
+    var timestmp = new Date().setFullYear(new Date().getFullYear(), 0, 1);
+    var yearFirstDay = Math.floor(timestmp / 86400000);
+    var today = Math.ceil((new Date().getTime()) / 86400000);
+    var dayOfYear = today - yearFirstDay;
+
+
     return {
-        TimeStamp: (function(){
+        TimeStamp: (function () {
             return {
-                UnixTimestamp: function(){},
-                UnixMillisecond: function(){}
+                UnixTimestamp: function () {
+                    var dateTime = Date.now();
+                    var timeStamp = Math.floor(dateTime / 1000);
+                    return timeStamp.toString();
+                },
+                UnixMillisecond: function () {
+                    return new Date().getTime();
+                }
             }
         })(),
-        Local: (function(){
+        Local: (function () {
             return {
-                Time: (function() {
+                Time: (function () {
                     return {
-                        WithSeconds: function(){},
-                        WithOutSeconds: function() {}
+                        WithSeconds: function () {
+                            return (twelveHour + ":" + m + ":" + s) + " " + amPM.toString();
+                        },
+                        WithOutSeconds: function () {
+                            return (twelveHour + ":" + m) + " " + amPM.toString();
+                        }
                     }
                 })(),
-                MDY: (function(){
+                MDY: (function () {
                     return {
-                        Numeral: function(){},
-                        Name: function(){}
+                        Numeral: function () {
+                            return (monthNumber + "/" + dayDblDigit + "/" + Year).toString();
+                        },
+                        Name: function () {
+                            return (currentMonth + " " + dayDblDigit + "," + " " + Year).toString();
+                        }
                     }
                 })(),
             }
         })(),
-        Second: (function(){
-            return{
-                Second: function(){},
-                DblDigit: function(){}
-            }
-        })(),
-        Minute: (function(){
-            return{
-                Minute: function(){},
-                DblDigit: function(){}
-            }
-        })(),
-        Hour: (function(){
+        Second: (function () {
             return {
-                TwentyFourHour: function() {},
-                TwelveHour: function() {},
-                AMPM: (function() {
+                Second: function () {
+                    return seconds.toString();
+                },
+                DblDigit: function () {
+                    if (seconds < 10) {
+                        return ("0" + seconds.toString());
+                    } else {
+                        return seconds.toString();
+                    }
+                }
+            }
+        })(),
+        Minute: (function () {
+            return {
+                Minute: function () {
+                    return minutes.toString();
+                },
+                DblDigit: function () {
+                    if (minutes < 10) {
+                        return ("0" + minutes.toString());
+                    } else {
+                        return minutes.toString();
+                    }
+                }
+            }
+        })(),
+        Hour: (function () {
+            return {
+                TwentyFourHour: function () {
+                    return twentyFourHour.toString();
+                },
+                TwelveHour: function () {
+                    return twelveHour.toString();
+                },
+                AMPM: (function () {
                     return {
-                        UpperCase: function(){},
-                        LowerCase: function(){}
+                        UpperCase: function () {
+                            return amPM;
+                        },
+                        LowerCase: function () {
+                            return amPM.toLowerCase();
+                        }
                     }
                 })()
             }
         })(),
-        Week: (function(){
+        Week: (function () {
             return {
-                DayOfWeek: function(){},
-                AbrDayOfWeek: function(){},
-                FirstTwoOfWeek: function(){},
-                WeekOfYear: function(){}
+                DayOfWeek: function () {
+                    return currentDay.toString();
+                },
+                AbrDayOfWeek: function () {
+                    return currentDay.substring(0, 3);
+                },
+                FirstTwoOfWeek: function () {
+                    return currentDay.substring(0, 2);
+                },
+                WeekOfYear: function () {
+                    var now = new Date();
+                    var start = new Date(now.getFullYear(), 0, 0);
+                    var diff = now - start;
+                    var oneDay = 1000 * 60 * 60 * 24;
+                    var day = Math.floor(diff / oneDay);
+                    return String(Math.round(day / 7)+1);
+                    ;
+                }
             }
         })(),
-        Month: (function(){
+        Month: (function () {
             return {
-                DateOfMonth: (function(){
+                DateOfMonth: (function () {
                     return {
-                        Numeral: function(){},
-                        Ordinal: function(){},
-                        DateDblDigit: function(){}
+                        Numeral: function () {
+                            return dayMonth.toString();
+                        },
+                        Ordinal: function () {
+                            return (dayMonth + ordinalDay).toString();
+                        },
+                        DateDblDigit: function () {
+                            if (dayMonth < 10) {
+                                return ("0" + dayMonth.toString());
+                            } else {
+                                return dayMonth.toString();
+                            }
+                        }
                     }
                 })(),
-                MonthNumber: function(){},
-                MonthNumberDblDigit: function(){},
-                AbrOfCurrentMonth: function(){},
-                CurrentMonth: function(){}
+                MonthNumber: function () {
+                    return monthNumber.toString();
+                },
+                MonthNumberDblDigit: function () {
+                    if (monthNumber < 10) {
+                        return ("0" + monthNumber.toString());
+                    } else {
+                        return monthNumber.toString();
+                    }
+
+                },
+                AbrOfCurrentMonth: function () {
+                    return abrCurrentMonth;
+
+                },
+                CurrentMonth: function () {
+                    return currentMonth;
+
+                }
             }
         })(),
-        Year: (function(){
+        Year: (function () {
             return {
-                DayOfYear: (function(){
+                DayOfYear: (function () {
                     return {
-                        Numeral: function(){},
-                        Ordinal: function(){}
+                        Numeral: function () {
+                            return dayOfYear.toString();
+                        },
+                        Ordinal: function () {
+                            return (dayOfYear + ordinalDay).toString();
+                        }
                     }
                 })(),
-                YearFull: function(){},
-                YearAbr: function(){}
+                YearFull: function () {
+                    return Year.toString();
+                },
+                YearAbr: function () {
+                    return (Year % 100).toString();
+                }
             }
         })(),
-        Defaults: function(){}
+        Defaults: function () {
+            return (Year + "-" + monthDblDigit + "-" + dayDblDigit + "T" + h + ":" + m + ":" + s).toString();
+        }
     }
 })();
